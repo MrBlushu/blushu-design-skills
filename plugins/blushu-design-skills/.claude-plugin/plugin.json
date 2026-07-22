@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "blushu-design-skills",
+  "displayName": "Blushu Design Skills",
+  "version": "0.1.0",
+  "description": "A modular design workflow for building and refining thoughtful websites.",
+  "author": {
+    "name": "Blushu",
+    "url": "https://github.com/MrBlushu"
+  },
+  "homepage": "https://github.com/MrBlushu/blushu-design-skills#readme",
+  "repository": "https://github.com/MrBlushu/blushu-design-skills",
+  "keywords": [
+    "web-design",
+    "ux",
+    "ui",
+    "frontend"
+  ]
+}

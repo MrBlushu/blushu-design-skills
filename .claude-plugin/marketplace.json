@@ -1,0 +1,22 @@
+{
+  "name": "blushu-design-skills",
+  "owner": {
+    "name": "Blushu"
+  },
+  "metadata": {
+    "description": "A modular design workflow for building and refining thoughtful websites."
+  },
+  "plugins": [
+    {
+      "name": "blushu-design-skills",
+      "source": "./plugins/blushu-design-skills",
+      "description": "Seven modular design skills for thoughtful website delivery.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Blushu",
+        "url": "https://github.com/MrBlushu"
+      },
+      "strict": true
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Blushu · Break It Right"
+  short_description: "Compose and verify semantic web line breaks"
+  default_prompt: "Use $break-it-right to compose and verify semantic line breaks for this web interface across its required viewports."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Blushu · Make It Obvious"
+  short_description: "Find and prioritize interface usability issues"
+  default_prompt: "Use $make-it-obvious to review this interface against its user task and prioritize concrete, verifiable usability improvements."

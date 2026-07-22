@@ -1,0 +1,35 @@
+# Source and working material
+*.pdf
+.skill-work/
+.site-work/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# JavaScript and build output
+node_modules/
+.next/
+dist/
+build/
+coverage/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+.cache/
+
+# Editors and operating systems
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*~

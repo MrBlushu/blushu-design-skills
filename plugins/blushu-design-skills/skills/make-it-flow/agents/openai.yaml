@@ -1,0 +1,4 @@
+interface:
+  display_name: "Blushu · Make It Flow"
+  short_description: "Choose and verify interaction patterns"
+  default_prompt: "Use $make-it-flow to compare interaction patterns and specify the best fit for this interface."

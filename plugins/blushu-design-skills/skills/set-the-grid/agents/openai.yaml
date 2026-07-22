@@ -1,0 +1,4 @@
+interface:
+  display_name: "Blushu · Set the Grid"
+  short_description: "Design and verify responsive grid systems"
+  default_prompt: "Use $set-the-grid to design and verify a responsive layout system for this interface."

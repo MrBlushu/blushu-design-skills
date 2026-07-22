@@ -1,0 +1,20 @@
+{
+  "name": "blushu-design-skills",
+  "interface": {
+    "displayName": "Blushu Design Skills"
+  },
+  "plugins": [
+    {
+      "name": "blushu-design-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/blushu-design-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

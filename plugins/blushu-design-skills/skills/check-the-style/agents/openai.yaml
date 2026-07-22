@@ -1,0 +1,4 @@
+interface:
+  display_name: "Blushu · Check the Style"
+  short_description: "Diagnose and refine interface visual design"
+  default_prompt: "Use $check-the-style to diagnose, prioritize, and refine the visual design of this interface."

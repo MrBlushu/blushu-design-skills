@@ -1,0 +1,4 @@
+interface:
+  display_name: "Blushu · Let's Build a Site"
+  short_description: "Build complete, verified sites from assets"
+  default_prompt: "Use $lets-build-a-site to inspect this brief and assets, choose the architecture, coordinate only needed specialists, implement the complete site, and verify the rendered result."

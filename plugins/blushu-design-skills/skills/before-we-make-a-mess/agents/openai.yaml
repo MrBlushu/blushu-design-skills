@@ -1,0 +1,4 @@
+interface:
+  display_name: "Blushu · Before We Make a Mess"
+  short_description: "Frame product decisions and reduce discovery risk"
+  default_prompt: "Use $before-we-make-a-mess to turn this uncertain product idea into an evidence-aware decision and focused next test."
