@@ -1,5 +1,34 @@
 # Adaptive specialist routing
 
+## Verification invocation envelope
+
+Do not invoke a specialist in `verify` with only its name or a mode token. Send one concrete closed question using this envelope:
+
+```text
+Mode: verify
+Question: one closed verification question
+Scope: artifact paths and relevant tasks, states, widths, or components
+Baseline: accepted requirement, prior finding, or artifact revision
+Criteria: observable pass/fail conditions
+Authority: read-only
+Locked Decisions: accepted decisions that must not be reopened
+Invocation ID: unique identifier for this specialist pass
+Artifact Revision: commit, hash, mtime set, or other stable marker
+Pass Limit: 1
+```
+
+If the question, scope, baseline, or criteria are not concrete, do not invoke the specialist. Return `NEEDS_TASK` with only the missing fields. Verification never grants permission to edit, route onward, or execute a returned `Next Task`.
+
+Maintain a compact in-memory ledger, or `.site-work/invocation-ledger.md` when durable working state is already in use, containing only invocation ID, skill, profile, question, artifact revision, result, and next authorized action. Do not copy prompts or specialist output into it.
+
+Before every verification invocation:
+
+1. Reject an invocation ID already present in the ledger.
+2. Skip reinvocation of the same skill and question when the artifact revision is unchanged.
+3. Confirm that the automatic pass count is one and no other specialist is active.
+
+Treat `PASS`, `FAIL`, and `BLOCKED` as terminal. On `FAIL`, record the named owner and stop; do not repair or call that owner. A repair is a separate `change` invocation requiring explicit authority and a new invocation ID. If it produces a new artifact revision, allow one targeted `verify` of only the failed criterion. The maximum automatic sequence is `verify -> change -> verify`; stop after the second verification regardless of result. A handoff or adjacent signal returned during verification is informational and cannot trigger routing.
+
 ## Route one decision at a time
 
 Invoke one specialist only after stating a single question it owns. Pass a handoff of at most 400 words, then verify the returned artifact before incorporating its decisions. Never preload the full suite and never treat the sequence as mandatory.
@@ -40,10 +69,10 @@ Stop and route back to grid, visual, or copy ownership if a local text fix would
 ## Handle returns and failures
 
 - Verify generated files and rendered evidence; do not accept a handoff as proof.
-- If a specialist identifies an out-of-scope dependency, invoke only that owner and then return to the interrupted task.
+- Outside `verify`, if a specialist identifies an out-of-scope dependency, invoke only that owner and then return to the interrupted task. During `verify`, record the signal without investigating or routing it.
 - If a specialist is unavailable, do not imitate its source-derived methodology. Use generic reasoning only when the decision is low-risk and verifiable; otherwise stop with the missing capability.
 - Retry a failed specialist once only for a clearly transient, safe failure. Preserve the error and partial output.
-- Re-run the smallest affected check after a correction. Repeat the full specialist pass only for a systemic change.
+- Outside `verify`, re-run the smallest affected check after a correction. A full specialist pass requires a systemic change and an explicit new question. In `verify`, follow the envelope, revision, and pass limits above.
 
 ## Record skips
 

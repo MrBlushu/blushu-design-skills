@@ -13,6 +13,12 @@ Inspect available files before asking questions. Never invent identity, claims, 
 
 Keep the core workflow tool-agnostic so it runs in Codex and Claude Code. Use host-specific tools only as interchangeable ways to inspect, edit, render, and verify.
 
+## Verification routing guard
+
+Treat `verify` as a closed, read-only, one-pass profile. Before invoking a specialist, resolve one closed question, artifact scope, baseline, observable criteria, locked decisions, invocation ID, stable artifact revision, and `Pass Limit: 1`. Read `references/specialist-routing.md` and send the complete verification envelope; never forward only a skill name or mode token.
+
+A specialist `PASS`, `FAIL`, or `BLOCKED` is terminal for that verification invocation. Do not turn a failure into an automatic repair, follow a returned handoff, or invoke another specialist. A repair requires separate explicit `change` authority. After an authorized change creates a new artifact revision, allow at most one targeted reverification of the failed criterion. Never rerun the same skill and question against an unchanged revision.
+
 ## Load references progressively
 
 - **At every start:** read `references/intake-and-classification.md` before questioning the user or editing the project.
