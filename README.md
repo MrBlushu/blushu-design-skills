@@ -36,6 +36,33 @@ before-we-make-a-mess
 
 This is not a mandatory checklist. A visual refinement should not repeat product discovery when the product direction is already accepted. A usability review should not redesign the grid unless the evidence points to a structural cause. Loading fewer specialists keeps the context focused, avoids contradictory decisions, and makes each handoff easier to inspect.
 
+## Execution Profiles
+
+Every skill recognizes the same four execution profiles:
+
+| Profile | Use it when | Default authority |
+| --- | --- | --- |
+| `create` | A new decision, specification, design, or artifact is needed | Read-only unless the task authorizes creation |
+| `change` | An existing artifact must be modified within a named scope | Write only when the task separately authorizes the mutation |
+| `review` | You want an open search for relevant problems | Read-only |
+| `verify` | Completed work must be checked against declared criteria | Always read-only and limited to one pass |
+
+The profile does not grant permission by itself. For example, `change` identifies the requested kind of work, but the task must still explicitly authorize edits.
+
+Use `review` to discover and prioritize problems. Use `verify` only for a closed regression question with a concrete artifact, baseline, and observable criteria:
+
+```text
+Use make-it-obvious verify.
+
+Verify criteria U1 and U2 from ./acceptance-criteria.md against
+./src/preferences.html. This is read-only. Do not repair failures or invoke
+another skill. Return PASS, FAIL, or BLOCKED with evidence and Mutations: none.
+```
+
+A bare invocation such as `$make-it-obvious verify` cannot invent its own task. When no unambiguous recent artifact and criteria exist, the skill returns `NEEDS_TASK`, names only the missing fields, and stops before inspecting files or loading conditional references.
+
+A verification result is terminal. `FAIL` identifies the failed criteria and owner without starting a repair; `BLOCKED` identifies the missing decisive evidence. A repair, when requested, is a separate `change`, followed by at most one targeted reverification on a new artifact revision.
+
 ## Installation
 
 ### Codex

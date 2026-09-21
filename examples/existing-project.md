@@ -2,6 +2,41 @@
 
 Use a specialist directly when the project already exists and the problem does not require an end-to-end website workflow.
 
+## Choose an Execution Profile
+
+Use `review` for open diagnosis, `change` for an explicitly authorized modification, and `verify` for a closed read-only regression check.
+
+### Open review
+
+```text
+Use make-it-obvious review on ./src/preferences.html.
+Review the task of changing and saving notification preferences.
+Prioritize evidence-backed usability problems and define verification criteria.
+Do not modify files.
+```
+
+### Authorized change
+
+```text
+Use make-it-obvious change on ./src/preferences.html.
+Implement only the accepted fixes U1 and U2 from ./review.md.
+You are authorized to edit that file and its directly related tests.
+Preserve all other decisions, then report the affected checks.
+```
+
+### Closed verification
+
+```text
+Use make-it-obvious verify.
+Verify only U1 and U2 from ./acceptance-criteria.md against
+./src/preferences.html at its default state.
+This is read-only: do not fix failures, expand into a general review, invoke
+another skill, or execute a handoff. Return PASS, FAIL, or BLOCKED with evidence,
+failed criteria, owner when relevant, and Mutations: none.
+```
+
+If the artifact, question, baseline, or criteria are missing, `verify` returns `NEEDS_TASK` instead of reconstructing intent or starting a review.
+
 ## Product Discovery: `before-we-make-a-mess`
 
 ```text
