@@ -5,7 +5,11 @@ A playful, modular design workflow for building thoughtful websites with Codex a
 Blushu Design Skills can turn a small brief, an asset folder, or an existing frontend into a structured website workflow. The bundle includes six focused design specialists and one end-to-end orchestrator.
 
 > [!NOTE]
-> Codex and Claude Code marketplace validation and clean local installation passed before publication. Model-backed Claude workflow checks were deferred because of token budget and remain recommended for a future release check.
+> Codex marketplace validation and a clean local installation passed for version 0.2.0. The portable Claude manifest remains valid, but model-backed Claude workflow checks were not rerun because the Claude CLI was unavailable; they remain recommended before publication.
+
+## Version 0.2.0
+
+Version 0.2.0 adds shared `create`, `change`, `review`, and `verify` execution profiles to all seven skills. Closed verification is now read-only, limited to one pass, terminal, and guarded by `NEEDS_TASK` when an artifact or observable criteria are missing. The site orchestrator also rejects unchanged duplicate verification and limits an authorized repair sequence to `verify -> change -> verify`.
 
 ## Complete Flow or Focused Specialist
 
@@ -67,14 +71,14 @@ A verification result is terminal. `FAIL` identifies the failed criteria and own
 
 ### Codex
 
-Verified with Codex CLI `0.145.0-alpha.18` from an isolated local marketplace; the GitHub source form is supported by the same CLI help:
+Verified with Codex CLI `0.154.0-alpha.6.2` from a clean local marketplace installation; the GitHub source form is supported by the same CLI help:
 
 ```bash
 codex plugin marketplace add MrBlushu/blushu-design-skills --ref main
 codex plugin add blushu-design-skills@blushu-design-skills
 ```
 
-The clean-install check discovered all seven skills. Start a new Codex session after installing the plugin, then invoke a skill explicitly by typing `$` and selecting its name, or include it directly in the prompt—for example, `$lets-build-a-site`. Version `0.145.0-alpha.18` is the tested version, not a declared minimum.
+The clean-install check discovered all seven skills. Start a new Codex session after installing the plugin, then invoke a skill explicitly by typing `$` and selecting its name, or include it directly in the prompt—for example, `$lets-build-a-site`. Version `0.154.0-alpha.6.2` is the tested version, not a declared minimum.
 
 ### Claude Code
 
@@ -238,7 +242,7 @@ Codex and Claude Code use separate platform manifests and marketplaces, but both
 - The asset inventory helper requires Python 3 and uses only the standard library.
 - Rendered QA depends on the browser, device, or preview tools available in the host environment.
 - The workflow does not publish websites, change DNS, purchase services, activate analytics, or send real form submissions without explicit authorization.
-- Codex local marketplace installation is verified on `0.145.0-alpha.18`; no minimum Codex version is declared.
+- Codex local marketplace installation is verified on `0.154.0-alpha.6.2`; no minimum Codex version is declared.
 - Claude Code marketplace validation and local installation are verified on `2.1.117`; no minimum Claude Code version is declared.
 - Remote GitHub installation is checked again from a clean clone during publication.
 
