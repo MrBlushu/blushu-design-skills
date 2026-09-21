@@ -104,6 +104,16 @@ def validate_skill_text(skill: str, text: str) -> list[str]:
         errors.append(f"{skill}: verify does not declare a bounded single pass")
     if not re.search(r"do not invoke another skill|non invocare altre skill", verify_window, re.IGNORECASE):
         errors.append(f"{skill}: verify does not forbid cross-skill invocation")
+    if not re.search(r"do not mutate|non mutare", verify_window, re.IGNORECASE):
+        errors.append(f"{skill}: verify does not forbid mutations")
+    if not re.search(
+        r"do not [^\n]*(?:recommend or apply a repair|"
+        r"recommend or execute a learning action)|"
+        r"non raccomandare o applicare correzioni",
+        verify_window,
+        re.IGNORECASE,
+    ):
+        errors.append(f"{skill}: verify does not forbid corrective action")
     if not re.search(
         r"do not execute a handoff|non eseguire handoff", verify_window, re.IGNORECASE
     ):

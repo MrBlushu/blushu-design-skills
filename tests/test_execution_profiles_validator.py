@@ -56,6 +56,20 @@ class ExecutionProfileValidatorTest(unittest.TestCase):
         )
         self.assert_has_error(mutated, "does not stop before inspection")
 
+    def test_missing_mutation_prohibition_fails(self) -> None:
+        mutated = self.valid_text.replace(
+            "Do not mutate files, designs, configuration, or external systems; ",
+            "",
+        )
+        self.assert_has_error(mutated, "does not forbid mutations")
+
+    def test_missing_repair_prohibition_fails(self) -> None:
+        mutated = self.valid_text.replace(
+            "do not recommend or apply a repair; ",
+            "",
+        )
+        self.assert_has_error(mutated, "does not forbid corrective action")
+
 
 if __name__ == "__main__":
     unittest.main()
