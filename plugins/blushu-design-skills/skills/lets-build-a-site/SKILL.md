@@ -5,6 +5,27 @@ description: Build or complete end-to-end websites from sparse briefs, documents
 
 # Let's Build a Site
 
+## Resolve the execution profile
+
+Resolve this before the mandatory intake reference, project inspection, or creation of working artifacts:
+
+- **create:** produce a new site architecture, plan, implementation, or complete site; write only when the task authorizes creation;
+- **change:** modify an existing site within the named scope, but write only with separate task-supplied authorization;
+- **review:** inspect a supplied site or plan for open end-to-end problems without modifying files;
+- **verify:** test only declared website acceptance criteria or final-QA claims on completed work; always remain read-only.
+
+Choose the profile from an explicit token after the skill name, then an explicit handoff `Mode`, then unambiguous request language, otherwise preserve the existing end-to-end build behavior when the request actually supplies a concrete site task. A profile never grants write authority.
+
+After resolving any profile, require a concrete site task or question, usable scope or artifact, and any authority the profile needs. If the request or workflow handoff supplies only the skill name, profile token, or `Mode` without that task context, and no usable recent context resolves it, return only the resolved `Mode` or `Mode: unresolved`, `Status: NEEDS_TASK`, the missing task fields, and `Mutations: none`; then stop before project inspection, reference loading, routing, or working-file creation.
+
+For a workflow `verify` handoff, require `Question`, `Scope`, `Baseline`, `Criteria`, `Authority: read-only`, `Locked Decisions`, `Invocation ID`, `Artifact Revision`, and `Pass Limit: 1`. Recover a direct conversational task from the immediately preceding context only when artifact, closed question, scope, baseline, and criteria have one strongly supported interpretation. Otherwise return only `Mode: verify`, `Status: NEEDS_TASK`, the missing fields, and `Mutations: none`.
+
+In its own `verify` profile, check only declared acceptance criteria and directly affected neighboring state in one bounded pass. Load only references needed to interpret those criteria and use real build or rendered evidence when required. Retry one tool action only for a clearly transient safe failure. Do not mutate files, designs, configuration, external systems, or `.site-work`; do not rebuild, redesign, broaden into general QA, invoke a specialist or any other skill, recommend or apply a repair, or execute a handoff or `Next Task`.
+
+End `verify` with `Mode`, terminal `Status: PASS | FAIL | BLOCKED`, checked `Scope`, criterion-specific `Evidence`, `Failed Criteria`, optional uninvestigated `Out-of-scope Signals`, `Owner` for a failure, and `Mutations: none`. `PASS` needs evidence for every criterion; use `BLOCKED` when decisive rendering, build evidence, an artifact, or a required tool is unavailable.
+
+This terminal report replaces normal site delivery. In `verify`, retain only evidence, selective reference, and quality-gate rules needed for the declared criteria; skip intake expansion, inventory, architecture, planning, implementation, correction, specialist routing, working artifacts, recommendations, and handoffs.
+
 ## Operating contract
 
 Own intake, architecture integration, implementation, rendered QA, and delivery. Delegate only decisions that need a specialist. Invoke specialists one at a time; verify their artifacts before preserving their decisions.
@@ -13,17 +34,19 @@ Inspect available files before asking questions. Never invent identity, claims, 
 
 Keep the core workflow tool-agnostic so it runs in Codex and Claude Code. Use host-specific tools only as interchangeable ways to inspect, edit, render, and verify.
 
-## Verification routing guard
+## Specialist verification routing guard
 
-Treat `verify` as a closed, read-only, one-pass profile. Before invoking a specialist, resolve one closed question, artifact scope, baseline, stable criterion IDs and observable conditions, locked decisions, sequence ID, invocation ID, verification ordinal, stable artifact revision, and `Pass Limit: 1`. Read `references/specialist-routing.md` and send the complete verification envelope; never forward only a skill name or mode token. Keep ledger state in memory for the entire `verify -> change -> verify` sequence so tracking the pass cannot mutate the artifact or repository.
+This section applies only when a non-verify orchestration workflow dispatches a specialist in that specialist's `verify` profile. It does not permit `lets-build-a-site` to invoke a specialist during its own `verify` profile.
+
+Before invoking a specialist verifier, resolve one closed question, artifact scope, baseline, stable criterion IDs and observable conditions, locked decisions, sequence ID, invocation ID, verification ordinal, stable artifact revision, and `Pass Limit: 1`. Read `references/specialist-routing.md` and send the complete verification envelope; never forward only a skill name or mode token. Keep ledger state in memory for the entire `verify -> change -> verify` sequence so tracking the pass cannot mutate the artifact or repository.
 
 A specialist `PASS`, `FAIL`, or `BLOCKED` is terminal for that verification invocation. Do not turn a failure into an automatic repair, follow a returned handoff, or invoke another specialist. A repair requires separate explicit `change` authority. After an authorized change creates a new artifact revision, allow at most one targeted reverification of the failed criterion. Never rerun the same skill and question against an unchanged revision.
 
-While `verify` is active, skip every instruction below that creates or updates `.site-work`, `qa-report.md`, design-decision records, handoffs, or other files. Keep required records in memory and include only the terminal verification report in the response.
+While the specialist `verify` invocation is active, skip every instruction below that creates or updates `.site-work`, `qa-report.md`, design-decision records, handoffs, or other files. Keep its required records in memory and return its terminal report to the outer orchestrator. After a nested `PASS`, resume the authorized outer non-verify profile (`create`, `change`, or `review`). A nested `FAIL` or `BLOCKED` terminates only that verification step: record its result and owner in memory, do not repair automatically, and let the outer workflow report the unresolved gate without treating the specialist report as the site's final response.
 
 ## Load references progressively
 
-- **At every start:** read `references/intake-and-classification.md` before questioning the user or editing the project.
+- **At every non-verify start after profile preflight:** read `references/intake-and-classification.md` before questioning the user or editing the project.
 - **When the request includes assets, documents, copy, media, or missing content:** read `references/assets-and-content-gaps.md`. Run `scripts/inventory_assets.py` when manual metadata collection would be repetitive.
 - **When architecture is not already accepted or a sitemap must be created:** read `references/architecture-single-vs-multi.md`.
 - **Before invoking a specialist, accepting its return, or reopening an upstream decision:** read `references/specialist-routing.md`.

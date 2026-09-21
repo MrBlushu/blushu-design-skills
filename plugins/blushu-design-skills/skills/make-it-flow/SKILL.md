@@ -7,10 +7,31 @@ description: Select, compare, compose, specify, implement, and verify interactio
 
 Turn a concrete interface problem into a coherent, testable interaction model. Implement only when the user explicitly requests a build or change; keep review and advice read-only.
 
+## Resolve the execution profile
+
+Resolve this before loading references or inspecting the project or artifact:
+
+- **create:** produce a new interaction decision, specification, or blueprint; write only when the task authorizes an artifact;
+- **change:** revise or implement an existing interaction within the named scope, but write only with separate task-supplied authorization;
+- **review:** inspect a supplied interaction for evidence-backed mismatches without modifying files;
+- **verify:** test only declared states, transitions, navigation, input, feedback, recovery, or continuity criteria on completed work; always remain read-only.
+
+Map the previous `design` mode to `create`, and `revision` or `implementation` to `change`; implementation still requires explicit write authorization. Treat a focused decision as a scope modifier. Choose the profile from an explicit token after the skill name, then an explicit handoff `Mode`, then unambiguous request language, otherwise preserve the existing design/review behavior.
+
+After resolving any profile, require a concrete interaction task or question, usable scope or artifact, and any authority the profile needs. If the request or workflow handoff supplies only the skill name, profile token, or `Mode` without that task context, and no usable recent context resolves it, return only the resolved `Mode` or `Mode: unresolved`, `Status: NEEDS_TASK`, the missing task fields, and `Mutations: none`; then stop before inspecting artifacts, loading references, or routing work.
+
+For a workflow `verify` handoff, require `Question`, `Scope`, `Baseline`, `Criteria`, `Authority: read-only`, `Locked Decisions`, `Invocation ID`, `Artifact Revision`, and `Pass Limit: 1`. Recover a direct conversational task from the immediately preceding context only when artifact, closed question, scope, baseline, and criteria have one strongly supported interpretation. Otherwise return only `Mode: verify`, `Status: NEEDS_TASK`, the missing fields, and `Mutations: none`.
+
+In `verify`, check only declared criteria and directly affected neighboring state in one bounded pass. Use real behavior when the claim requires it and load only the relevant domain and verification references. Retry one tool action only for a clearly transient safe failure. Do not mutate files, designs, configuration, or external systems; do not compare new pattern candidates, redesign the flow, recommend or apply a repair, invoke another skill, or execute a handoff or `Next Task`.
+
+End `verify` with `Mode`, terminal `Status: PASS | FAIL | BLOCKED`, checked `Scope`, criterion-specific `Evidence`, `Failed Criteria`, optional uninvestigated `Out-of-scope Signals`, `Owner` for a failure, and `Mutations: none`. `PASS` needs evidence for every criterion; use `BLOCKED` when decisive behavior, an artifact, or a required tool is unavailable.
+
+This terminal report replaces the normal output. In `verify`, retain only domain evidence, state-model, selective reference, and verification rules needed for the declared criteria; skip candidate generation, pattern selection, composition, implementation, recommendations, routing, and handoffs.
+
 ## Workflow
 
 1. **Set scope and mode.**
-   - Classify the request as design, revision, implementation, or review.
+   - Use the resolved `create`, `change`, or `review` profile; `verify` follows the bounded contract above instead of this workflow.
    - Limit mixed requests to the interaction-pattern portion and name any necessary handoff.
    - Route away unresolved product discovery, pure visual direction, generic usability review, text editing, certification, and unrelated debugging.
    - If the primary request is a generic audit or asks for everything wrong without naming an interaction-pattern decision, stop after stating that boundary and the appropriate handoff. Do not manufacture a pattern decision from the artifact or produce audit findings.
@@ -50,10 +71,10 @@ Turn a concrete interface problem into a coherent, testable interaction model. I
    - Preserve selection, location, uncommitted work, and relevant history across switches unless a deliberate reset is safer.
 
 9. **Act according to mode.**
-   - For design, deliver the decision and interaction blueprint.
-   - For revision, identify the current mismatch and the smallest coherent replacement.
-   - For implementation, reuse local conventions, edit the minimum coherent surface, and add or update proportionate tests.
-   - For review, report evidence-backed mismatches and pass criteria without modifying files unless asked to fix them.
+   - For `create`, deliver the decision and interaction blueprint.
+   - For a read-only `change`, identify the current mismatch and the smallest coherent replacement without editing.
+   - For an authorized `change`, reuse local conventions, edit the minimum coherent surface, and add or update proportionate tests.
+   - For `review`, remain read-only and report evidence-backed mismatches and pass criteria. If the task asks to fix them, resolve the profile as `change` and require separate write authorization.
 
 10. **Verify and report.**
     - Exercise the critical task and alternate paths that affect safety, continuity, recovery, input, responsiveness, or latency.
