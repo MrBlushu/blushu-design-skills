@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Preferenze notifiche</title>
+    <style>
+      :root { color-scheme: light; font-family: system-ui, sans-serif; }
+      body { margin: 0; background: #f6f4ef; color: #17201b; }
+      main { width: min(42rem, calc(100% - 2rem)); margin: 4rem auto; }
+      h1 { max-width: 22ch; font-size: clamp(2rem, 6vw, 4rem); line-height: 1.05; }
+      fieldset { border: 1px solid #b7c0b9; border-radius: 0.75rem; padding: 1rem; }
+      .status { margin-top: 1.5rem; color: #3f5145; }
+      .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+      button { min-height: 2.75rem; border-radius: 0.5rem; padding: 0 1rem; font: inherit; }
+      .primary { border: 2px solid #174c35; background: #174c35; color: #fff; font-weight: 700; }
+      .secondary { border: 1px solid #66756b; background: transparent; color: #243129; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Controlla le preferenze prima di salvare le modifiche</h1>
+      <form>
+        <fieldset>
+          <legend>Notifiche</legend>
+          <label><input type="checkbox" checked> Aggiornamenti del progetto</label>
+        </fieldset>
+        <p class="status" role="status">Modifiche non ancora salvate</p>
+        <div class="actions">
+          <button class="primary" type="submit">Salva preferenze</button>
+          <button class="secondary" type="button">Annulla e torna al profilo</button>
+        </div>
+      </form>
+    </main>
+  </body>
+</html>

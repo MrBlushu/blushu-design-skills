@@ -1,3 +1,5 @@
+![Blushu Design Skills — Bauhaus geometric banner](assets/blushu-design-skills-banner.png)
+
 # Blushu Design Skills
 
 A playful, modular design workflow for building thoughtful websites with Codex and Claude Code.
@@ -5,7 +7,11 @@ A playful, modular design workflow for building thoughtful websites with Codex a
 Blushu Design Skills can turn a small brief, an asset folder, or an existing frontend into a structured website workflow. The bundle includes six focused design specialists and one end-to-end orchestrator.
 
 > [!NOTE]
-> Codex and Claude Code marketplace validation and clean local installation passed before publication. Model-backed Claude workflow checks were deferred because of token budget and remain recommended for a future release check.
+> Codex marketplace validation and a clean local installation passed for version 0.2.0. The portable Claude manifest remains valid, but model-backed Claude workflow checks were not rerun because the Claude CLI was unavailable; they remain recommended before publication.
+
+## Version 0.2.0
+
+Version 0.2.0 adds shared `create`, `change`, `review`, and `verify` execution profiles to all seven skills. Closed verification is now read-only, limited to one pass, terminal, and guarded by `NEEDS_TASK` when an artifact or observable criteria are missing. The site orchestrator also rejects unchanged duplicate verification and limits an authorized repair sequence to `verify -> change -> verify`.
 
 ## Complete Flow or Focused Specialist
 
@@ -36,18 +42,45 @@ before-we-make-a-mess
 
 This is not a mandatory checklist. A visual refinement should not repeat product discovery when the product direction is already accepted. A usability review should not redesign the grid unless the evidence points to a structural cause. Loading fewer specialists keeps the context focused, avoids contradictory decisions, and makes each handoff easier to inspect.
 
+## Execution Profiles
+
+Every skill recognizes the same four execution profiles:
+
+| Profile | Use it when | Default authority |
+| --- | --- | --- |
+| `create` | A new decision, specification, design, or artifact is needed | Read-only unless the task authorizes creation |
+| `change` | An existing artifact must be modified within a named scope | Write only when the task separately authorizes the mutation |
+| `review` | You want an open search for relevant problems | Read-only |
+| `verify` | Completed work must be checked against declared criteria | Always read-only and limited to one pass |
+
+The profile does not grant permission by itself. For example, `change` identifies the requested kind of work, but the task must still explicitly authorize edits.
+
+Use `review` to discover and prioritize problems. Use `verify` only for a closed regression question with a concrete artifact, baseline, and observable criteria:
+
+```text
+Use make-it-obvious verify.
+
+Verify criteria U1 and U2 from ./acceptance-criteria.md against
+./src/preferences.html. This is read-only. Do not repair failures or invoke
+another skill. Return PASS, FAIL, or BLOCKED with evidence and Mutations: none.
+```
+
+A bare invocation such as `$make-it-obvious verify` cannot invent its own task. When no unambiguous recent artifact and criteria exist, the skill returns `NEEDS_TASK`, names only the missing fields, and stops before inspecting files or loading conditional references.
+
+A verification result is terminal. `FAIL` identifies the failed criteria and owner without starting a repair; `BLOCKED` identifies the missing decisive evidence. A repair, when requested, is a separate `change`, followed by at most one targeted reverification on a new artifact revision.
+
 ## Installation
 
 ### Codex
 
-Verified with Codex CLI `0.145.0-alpha.18` from an isolated local marketplace; the GitHub source form is supported by the same CLI help:
+Verified with Codex CLI `0.154.0-alpha.6.2` from a clean local marketplace installation; the GitHub source form is supported by the same CLI help:
 
 ```bash
 codex plugin marketplace add MrBlushu/blushu-design-skills --ref main
 codex plugin add blushu-design-skills@blushu-design-skills
 ```
 
-The clean-install check discovered all seven skills. Start a new Codex session after installing the plugin, then invoke a skill explicitly by typing `$` and selecting its name, or include it directly in the prompt—for example, `$lets-build-a-site`. Version `0.145.0-alpha.18` is the tested version, not a declared minimum.
+The clean-install check discovered all seven skills. Start a new Codex session after installing the plugin, then invoke a skill explicitly by typing `$` and selecting its name, or include it directly in the prompt—for example, `$lets-build-a-site`. Version `0.154.0-alpha.6.2` is the tested version, not a declared minimum.
 
 ### Claude Code
 
@@ -58,7 +91,7 @@ claude plugin marketplace add MrBlushu/blushu-design-skills
 claude plugin install blushu-design-skills@blushu-design-skills
 ```
 
-After installation, run `/reload-plugins` if the current session does not show the new skills. Claude Code namespaces plugin skills as `/plugin-name:skill-name`, for example `/blushu-design-skills:lets-build-a-site`. Version `2.1.117` is the tested version, not a declared minimum. Seven model-backed invocations remain a release gate.
+After installation, run `/reload-plugins` if the current session does not show the new skills. Claude Code namespaces plugin skills as `/plugin-name:skill-name`, for example `/blushu-design-skills:lets-build-a-site`. Version `2.1.117` is the tested version, not a declared minimum. Seven model-backed invocations remain recommended as a future compatibility check.
 
 ## Build a Complete Website
 
@@ -211,7 +244,7 @@ Codex and Claude Code use separate platform manifests and marketplaces, but both
 - The asset inventory helper requires Python 3 and uses only the standard library.
 - Rendered QA depends on the browser, device, or preview tools available in the host environment.
 - The workflow does not publish websites, change DNS, purchase services, activate analytics, or send real form submissions without explicit authorization.
-- Codex local marketplace installation is verified on `0.145.0-alpha.18`; no minimum Codex version is declared.
+- Codex local marketplace installation is verified on `0.154.0-alpha.6.2`; no minimum Codex version is declared.
 - Claude Code marketplace validation and local installation are verified on `2.1.117`; no minimum Claude Code version is declared.
 - Remote GitHub installation is checked again from a clean clone during publication.
 

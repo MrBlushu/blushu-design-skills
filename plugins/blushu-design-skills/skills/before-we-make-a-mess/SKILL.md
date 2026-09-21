@@ -5,6 +5,27 @@ description: Guide product discovery for uncertain opportunities, features, and 
 
 # Before We Make a Mess
 
+## Resolve the execution profile
+
+Resolve this before loading references, inspecting artifacts, or routing work:
+
+- **create:** produce a new discovery frame, decision gate, learning plan, or bounded handoff; write only when the task authorizes it;
+- **change:** revise a named discovery artifact or decision record within scope, but write only with separate task-supplied authorization;
+- **review:** examine supplied discovery evidence, assumptions, or readiness without modifying artifacts;
+- **verify:** test only declared decision-gate conditions or evidence claims on completed work; always remain read-only.
+
+Choose the profile from an explicit token after the skill name, then an explicit handoff `Mode`, then unambiguous request language, otherwise use the existing discovery behavior. A profile never grants write authority.
+
+After resolving any profile, require a concrete task or decision question, usable scope or artifact, and any authority the profile needs. If the request or workflow handoff supplies only the skill name, profile token, or `Mode` without that task context, and no usable recent context resolves it, return only the resolved `Mode` or `Mode: unresolved`, `Status: NEEDS_TASK`, the missing task fields, and `Mutations: none`; then stop before inspecting artifacts, loading references, or routing work.
+
+For a workflow `verify` handoff, require `Question`, `Scope`, `Baseline`, `Criteria`, `Authority: read-only`, `Locked Decisions`, `Invocation ID`, `Artifact Revision`, and `Pass Limit: 1`. A direct conversational invocation may recover the artifact, closed question, scope, baseline, and criteria from the immediately preceding context only when one interpretation is strongly supported. Otherwise return only `Mode: verify`, `Status: NEEDS_TASK`, the missing task fields, and `Mutations: none`.
+
+In `verify`, check only the declared conditions and directly relevant evidence in one bounded pass. Load only references required to interpret that evidence. Retry one tool action only for a clearly transient safe failure. Do not mutate files, designs, configuration, or external systems; do not restart discovery, propose a new research program, reprioritize risks, or recommend or execute a learning action; do not invoke another skill; and do not execute a handoff or `Next Task`.
+
+End `verify` with `Mode`, terminal `Status: PASS | FAIL | BLOCKED`, checked `Scope`, criterion-specific `Evidence`, `Failed Criteria`, optional uninvestigated `Out-of-scope Signals`, `Owner` for a failure, and `Mutations: none`. `PASS` needs named evidence for every criterion; use `BLOCKED` when decisive evidence or a required tool is unavailable.
+
+This terminal report replaces the normal discovery output. In `verify`, retain the claim-state, provenance, evidence-limitation, and decision-gate rules below only as needed to judge declared criteria; skip framing, risk prioritization, learning design, recommendations, routing, and handoffs.
+
 ## Operating contract
 
 Make an uncertain product decision explicit and evidence-aware before consolidating a UX/UI solution. Produce a decision, a focused learning action, or a bounded handoff—not a delivery roadmap or an encyclopedic checklist.

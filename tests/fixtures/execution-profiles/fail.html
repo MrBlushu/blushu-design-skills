@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Preferenze notifiche</title>
+    <style>
+      :root { color-scheme: light; font-family: system-ui, sans-serif; }
+      body { margin: 0; background: #eeeeee; color: #a5a5a5; }
+      main { width: min(42rem, calc(100% - 2rem)); margin: 4rem auto; }
+      h1 { max-width: 22ch; font-size: clamp(2rem, 6vw, 4rem); line-height: 1.05; }
+      .forced-last-line { white-space: nowrap; }
+      fieldset { border: 1px solid #c8c8c8; padding: 1rem; }
+      .actions { display: flex; gap: 0.75rem; }
+      button { min-height: 2.75rem; border: 1px solid #c3c3c3; background: #dddddd; color: #aaaaaa; padding: 0 1rem; font: inherit; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Controlla le preferenze prima di salvare le modifiche<br><span class="forced-last-line">ora</span></h1>
+      <form>
+        <fieldset>
+          <legend>Notifiche</legend>
+          <label><input type="checkbox" checked> Aggiornamenti del progetto</label>
+        </fieldset>
+        <div class="actions">
+          <button type="submit">OK</button>
+          <button type="button">No</button>
+        </div>
+      </form>
+    </main>
+  </body>
+</html>

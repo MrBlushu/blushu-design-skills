@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Preferenze notifiche</title>
+    <style>
+      @font-face {
+        font-family: "Brand Sans";
+        src: url("./brand-sans.woff2") format("woff2");
+      }
+      :root { color-scheme: light; font-family: "Brand Sans", sans-serif; }
+      body { margin: 0; background: #f6f4ef; color: #17201b; }
+      main { width: min(42rem, calc(100% - 2rem)); margin: 4rem auto; }
+      h1 { max-width: 22ch; font-size: clamp(2rem, 6vw, 4rem); line-height: 1.05; }
+      .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+      button { min-height: 2.75rem; padding: 0 1rem; font: inherit; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Controlla le preferenze prima di salvare le modifiche</h1>
+      <p>Questa fixture non include dati di test con partecipanti né un visual baseline approvato.</p>
+      <div class="actions">
+        <button type="button">Salva preferenze</button>
+        <button type="button">Annulla e torna al profilo</button>
+      </div>
+    </main>
+  </body>
+</html>
