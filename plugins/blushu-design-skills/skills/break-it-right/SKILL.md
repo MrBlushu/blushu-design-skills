@@ -18,11 +18,13 @@ Non ottimizzare per ottenere il minor numero possibile di righe. Mantenere sulla
 Risolvere il profilo prima di caricare riferimenti o ispezionare l'artefatto:
 
 - **create:** produrre una nuova specifica o composizione editoriale; scrivere solo quando la richiesta lo autorizza;
-- **change:** modificare un artefatto esistente entro l'ambito nominato;
+- **change:** applicare una modifica richiesta entro l'ambito nominato, ma scrivere solo con un'autorizzazione separata fornita dal task;
 - **review:** cercare problemi di composizione senza modificare file;
 - **verify:** verificare soltanto claim o criteri di accettazione dichiarati su un lavoro concluso; restare sempre in sola lettura.
 
 Scegliere il profilo da un token esplicito dopo il nome della skill, poi da un campo `Mode` esplicito nel handoff, poi dal linguaggio non ambiguo della richiesta; altrimenti mantenere il comportamento esistente, usando `change` solo quando la richiesta autorizza chiaramente l'implementazione. Una richiesta focalizzata non concede permesso di scrittura.
+
+Se la richiesta corrente contiene soltanto il nome della skill e un eventuale token di profilo, senza un task recente o handoff utilizzabile, restituire soltanto il `Mode` risolto oppure `Mode: unresolved`, `Status: NEEDS_TASK`, i campi mancanti e `Mutations: none`; poi fermarsi prima di ispezionare artefatti o caricare riferimenti.
 
 Per un handoff di workflow in `verify`, richiedere `Question`, `Scope`, `Baseline`, `Criteria`, `Authority: read-only`, `Locked Decisions`, `Invocation ID`, `Artifact Revision` e `Pass Limit: 1`. In una chiamata conversazionale diretta è possibile recuperare artefatto, domanda chiusa, ambito, baseline e criteri dal contesto immediatamente precedente solo quando una sola interpretazione è fortemente supportata.
 
@@ -32,7 +34,7 @@ In `verify`:
 
 1. Controllare solo i criteri dichiarati e lo stato adiacente direttamente interessato, usando il minimo di rendering, evidenze e riferimenti necessari.
 2. Eseguire un solo passaggio limitato. Riprovare una singola azione strumentale solo per un errore chiaramente transitorio e sicuro.
-3. Non modificare file o design, ampliare in un audit globale, raccomandare o applicare correzioni, invocare altre skill o eseguire handoff e `Next Task`.
+3. Non mutare file, design, configurazione o sistemi esterni; non ampliare in un audit globale; non raccomandare o applicare correzioni; non invocare altre skill; e non eseguire handoff o `Next Task`.
 4. Preservare le decisioni bloccate. Segnalare una possibile regressione adiacente solo come segnale fuori ambito non investigato.
 5. Concludere con `Mode`, `Status: PASS | FAIL | BLOCKED`, `Scope` controllato, `Evidence` specifica per criterio, `Failed Criteria`, eventuali `Out-of-scope Signals`, `Owner` in caso di fallimento e `Mutations: none`. `PASS` richiede evidenza per ogni criterio; usare `BLOCKED` quando mancano font effettivo, rendering, baseline, artefatto o strumento decisivo.
 
@@ -55,7 +57,7 @@ Per i normali paragrafi, prediligere il wrapping naturale del browser. Non inser
 
 ## Processo obbligatorio
 
-Applicare il processo completo a `create`, `change` e alle review aperte. In `verify`, eseguire soltanto i controlli richiesti dal profilo limitato sopra: i criteri dichiarati prevalgono sulle verifiche globali e sull'elenco completo delle larghezze.
+Applicare il processo completo soltanto a `create` e `change` quando il task autorizza le operazioni richieste. In `review`, eseguire le fasi analitiche e di rendering sull'artefatto esistente, ma saltare ogni passo che implementa, corregge o ripete il rendering dopo una modifica. In `verify`, eseguire soltanto i controlli richiesti dal profilo limitato sopra: i criteri dichiarati prevalgono sulle verifiche globali e sull'elenco completo delle larghezze.
 
 Per ogni testo rilevante:
 
@@ -361,7 +363,7 @@ Non considerare completo un componente testuale finché:
 
 ## Consegna
 
-In `change`, implementare direttamente le correzioni autorizzate. In `create` o `review`, non modificare artefatti senza autorizzazione. In `verify`, usare esclusivamente il report terminale definito nel profilo di esecuzione.
+In `change`, implementare direttamente le correzioni autorizzate. `Review` rimane sempre in sola lettura; se il task autorizza una mutazione, risolvere il profilo come `change`. In `create`, modificare artefatti solo con autorizzazione esplicita. In `verify`, usare esclusivamente il report terminale definito nel profilo di esecuzione.
 
 Al termine di una modifica autorizzata, riepilogare in modo conciso soltanto:
 

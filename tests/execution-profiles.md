@@ -52,9 +52,17 @@ and whether any mutation occurred.
 
 ## No-task guard cases
 
-Start a fresh session with no preceding task, artifact, or handoff. Invoke each prompt exactly once:
+Start a fresh session with no preceding task, artifact, or handoff. Test both the bare skill invocation and its explicit verify form:
 
 ```text
+$before-we-make-a-mess
+$make-it-flow
+$set-the-grid
+$check-the-style
+$make-it-obvious
+$break-it-right
+$lets-build-a-site
+
 $before-we-make-a-mess verify
 $make-it-flow verify
 $set-the-grid verify
@@ -64,7 +72,7 @@ $break-it-right verify
 $lets-build-a-site verify
 ```
 
-After the contract is implemented, every case must return `NEEDS_TASK`, name only the missing task fields, avoid loading conditional references, make no mutations, and stop without routing.
+After the contract is implemented, every case must return `NEEDS_TASK`, name only the missing task fields, avoid loading conditional references, make no mutations, and stop without routing. Record tool actions after the preflight; the target is zero.
 
 ## Orchestrator cases
 
@@ -72,15 +80,15 @@ Use one fresh session per case and an isolated copy of the fixtures.
 
 ### O1: failure is terminal
 
-Ask `lets-build-a-site` to invoke `make-it-obvious` in `verify` mode for U1 and U2 against `fail.html`. Supply one invocation ID and artifact revision. Expect one specialist pass, `FAIL`, an owner, and no repair or secondary skill.
+Ask `lets-build-a-site` to invoke `make-it-obvious` in `verify` mode for U1 and U2 against `fail.html`. Supply stable criterion IDs, scope, sequence and origin IDs, invocation ID, ordinal 1, and artifact revision. Expect one specialist pass, `FAIL`, an owner, and no repair, secondary skill, persisted ledger, `.site-work` update, or followed handoff.
 
 ### O2: unchanged revision is not rechecked
 
-Repeat O1 with the same invocation ID and artifact revision. Expect the orchestrator to reject or skip the duplicate without rerunning the specialist.
+Repeat O1 first with the same invocation ID. Then use new invocation and sequence IDs plus rephrased question text while preserving the same skill, criterion IDs, scope, and artifact revision. Expect the orchestrator to reject or skip both duplicates without rerunning the specialist.
 
 ### O3: one authorized reverification
 
-After O1, explicitly authorize one scoped `change`, create a new artifact revision, and request a targeted reverification of only the failed criterion. Expect `verify -> change -> verify` at most. A further automatic pass must not occur.
+After O1, explicitly authorize one scoped `change` linked to the original sequence and create a new artifact revision. Attempt to verify the repair with a fresh sequence and ordinal 1; expect rejection. Then request a targeted ordinal-2 reverification under the original sequence and origin IDs using only recorded failed criteria; expect it to run once and close the sequence. A further repair or automatic pass must not occur.
 
 ## Result record
 

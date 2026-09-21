@@ -15,9 +15,11 @@ Keep the core workflow tool-agnostic so it runs in Codex and Claude Code. Use ho
 
 ## Verification routing guard
 
-Treat `verify` as a closed, read-only, one-pass profile. Before invoking a specialist, resolve one closed question, artifact scope, baseline, observable criteria, locked decisions, invocation ID, stable artifact revision, and `Pass Limit: 1`. Read `references/specialist-routing.md` and send the complete verification envelope; never forward only a skill name or mode token.
+Treat `verify` as a closed, read-only, one-pass profile. Before invoking a specialist, resolve one closed question, artifact scope, baseline, stable criterion IDs and observable conditions, locked decisions, sequence ID, invocation ID, verification ordinal, stable artifact revision, and `Pass Limit: 1`. Read `references/specialist-routing.md` and send the complete verification envelope; never forward only a skill name or mode token. Keep ledger state in memory for the entire `verify -> change -> verify` sequence so tracking the pass cannot mutate the artifact or repository.
 
 A specialist `PASS`, `FAIL`, or `BLOCKED` is terminal for that verification invocation. Do not turn a failure into an automatic repair, follow a returned handoff, or invoke another specialist. A repair requires separate explicit `change` authority. After an authorized change creates a new artifact revision, allow at most one targeted reverification of the failed criterion. Never rerun the same skill and question against an unchanged revision.
+
+While `verify` is active, skip every instruction below that creates or updates `.site-work`, `qa-report.md`, design-decision records, handoffs, or other files. Keep required records in memory and include only the terminal verification report in the response.
 
 ## Load references progressively
 
@@ -67,12 +69,12 @@ Preserve each specialist’s ownership. Reopen an accepted decision only when ve
 | Existing project | Preserve stack, conventions, components, tokens, tests, and unrelated user changes; do not introduce a new framework for convenience. |
 | Stack unspecified | Infer from existing code; for a new project choose the simplest environment-compatible option that meets the deliverable and record the choice. |
 | Visual QA unavailable | Run available static and build checks, mark rendering `not verified`, and withhold a production-ready claim when visual behavior is critical. |
-| Specialist unavailable or failed | Do not imitate its source-specific method. Continue with generic reasoning only for low-risk verifiable work; otherwise stop. Retry once only for a clearly transient safe failure. |
+| Specialist unavailable or failed | Do not imitate its source-specific method. Continue with generic reasoning only for low-risk verifiable work; otherwise stop. Outside `verify`, retry once only for a clearly transient safe failure. In `verify`, the active specialist may retry one transient tool action but the orchestrator must not start another specialist pass. |
 | External integration unavailable | Keep it disconnected or mocked and labeled; do not insert secrets, bypass authorization, or imply that submission works. |
 
 ## Artifacts and handoffs
 
-Maintain as needed under `.site-work/`: `site-brief.md`, `asset-manifest.md`, `content-gaps.md`, `site-map.md`, `design-decisions.md`, `ux-product-handoff.md`, and `qa-report.md`.
+Outside `verify`, maintain as needed under `.site-work/`: `site-brief.md`, `asset-manifest.md`, `content-gaps.md`, `site-map.md`, `design-decisions.md`, `ux-product-handoff.md`, and `qa-report.md`. Never create or update these artifacts during `verify`.
 
 Use the common handoff fields `Goal`, `Evidence`, `Constraints`, `Decisions`, `Open Risks`, `Artifacts`, and one `Next Task`. Keep the handoff under 400 words and pass paths rather than copied artifacts. A handoff is context to verify, not proof.
 

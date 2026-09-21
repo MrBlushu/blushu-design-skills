@@ -5,20 +5,18 @@ description: Analizza, progetta, implementa e verifica il visual design di inter
 
 # Check the Style
 
-## Set scope and mode
+## Resolve the execution profile
 
-Require at least one concrete artifact: code, a runnable interface, URL, screenshot, recording, mockup, exported design, or pasted component. Inspect the project before asking for information already available on disk.
-
-Use available tokens and themes, approved brand assets, target viewports, representative state and content fixtures, accessibility or localization constraints, visual baselines, and prior handoffs. Do not require every optional artifact for a local review; ask only for evidence whose absence would materially change the visual decision.
-
-Resolve the execution profile before loading references or inspecting the artifact:
+Resolve the execution profile before loading references or inspecting the project or artifact:
 
 - **create:** produce a new visual direction, specification, token decision, or artifact; write only when the request authorizes it;
-- **change:** implement a visual correction within the named scope, preserving the existing stack and system;
+- **change:** apply a requested visual correction within the named scope, preserving the existing stack and system, but write only with separate task-supplied authorization;
 - **review:** inspect without modifying files and return prioritized visual findings;
 - **verify:** test only declared visual claims or acceptance criteria on completed work; always remain read-only.
 
 Treat focused refinement as a scope modifier, not a competing mode. Choose the profile from an explicit token after the skill name, then an explicit handoff `Mode`, then unambiguous request language, otherwise use the existing visual-review behavior. Map “design direction” to `create` without write authority and “implementation” to `change` only when a write is explicitly authorized.
+
+If the current request supplies only the skill name and an optional profile token, with no usable recent task or handoff, return only the resolved `Mode` or `Mode: unresolved`, `Status: NEEDS_TASK`, the missing task fields, and `Mutations: none`; then stop before inspecting artifacts or loading references.
 
 For a workflow `verify` handoff, require `Question`, `Scope`, `Baseline`, `Criteria`, `Authority: read-only`, `Locked Decisions`, `Invocation ID`, `Artifact Revision`, and `Pass Limit: 1`. A direct conversational invocation may recover the artifact, closed question, scope, baseline, and criteria from the immediately preceding context only when one interpretation is strongly supported.
 
@@ -28,13 +26,19 @@ In `verify`:
 
 1. Check only the declared criteria and directly affected neighboring state, using the minimum rendering, evidence, and references needed.
 2. Run one bounded pass. Retry one tool action only for a clearly transient safe failure.
-3. Do not edit files or designs, broaden into an audit or refinement pass, recommend or apply a repair, invoke another skill, or execute a handoff or `Next Task`.
+3. Do not mutate files, designs, configuration, or external systems; do not broaden into an audit or refinement pass; do not recommend or apply a repair; do not invoke another skill; and do not execute a handoff or `Next Task`.
 4. Preserve locked product, interaction, content, grid, and visual decisions. Report a possible adjacent regression only as an uninvestigated out-of-scope signal.
 5. End with `Mode`, terminal `Status: PASS | FAIL | BLOCKED`, checked `Scope`, criterion-specific `Evidence`, `Failed Criteria`, optional `Out-of-scope Signals`, `Owner` for a failure, and `Mutations: none`. `PASS` needs evidence for every criterion; use `BLOCKED` when decisive evidence, a baseline, rendering, or a required tool is unavailable.
 
-This terminal verify report replaces the normal visual-review output below.
+This terminal verify report replaces the normal visual-review output below. In `verify`, skip open diagnosis, full prioritization, change specification, implementation, handoffs, and normal review output. Still apply the selective reference routing, rendered-evidence requirements, classification needed to interpret a declared criterion, and quality gates below when they are necessary for that criterion.
 
-Treat “review,” “evaluate,” “explain,” and equivalent read-only phrasing as read-only. Treat “fix,” “refine,” “implement,” “apply,” and equivalent direct change requests as permission to edit within the named scope.
+## Set scope
+
+Require at least one concrete artifact: code, a runnable interface, URL, screenshot, recording, mockup, exported design, or pasted component. Inspect the project before asking for information already available on disk.
+
+Use available tokens and themes, approved brand assets, target viewports, representative state and content fixtures, accessibility or localization constraints, visual baselines, and prior handoffs. Do not require every optional artifact for a local review; ask only for evidence whose absence would materially change the visual decision.
+
+Treat “review,” “evaluate,” “explain,” and equivalent phrasing as read-only. Treat “fix,” “refine,” “implement,” “apply,” and equivalent direct requests as write authorization only when the current task clearly asks for an actual mutation; a profile token or inherited mode alone is never permission.
 
 Keep product strategy, audience, outcomes, roadmap, interaction-pattern selection, navigation and flow design, full grid-system architecture, usability research, copywriting, semantic line composition, and complete accessibility audits outside scope. Refine the visual representation of already-decided patterns, states, content, and layout.
 

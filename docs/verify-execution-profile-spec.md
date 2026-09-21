@@ -125,7 +125,7 @@ Mutations: none
 - a handoff emitted or suggested during verification is informational and cannot trigger another specialist;
 - the smallest failed check is rerun after a change; a full specialist pass requires a systemic change and an explicit new question.
 
-The orchestrator should maintain a small in-memory or `.site-work` invocation ledger containing invocation ID, skill, profile, question, artifact revision, result, and next authorized action. The ledger must not copy skill output or become a second handoff format.
+The orchestrator must keep the sequence ledger in memory from the initial `verify` through its optional authorized `change` and single targeted reverification so tracking cannot mutate the repository or alter an artifact revision. Persistence is allowed only later as separately authorized non-verify orchestration work. Each entry contains sequence ID, invocation ID, origin verification ID, skill, profile, question, scope, stable criterion IDs, per-criterion outcomes including failed criterion IDs, verification ordinal, artifact revision, result, and next authorized action. Duplicate detection uses skill, criterion IDs, scope, and artifact revision rather than mutable question wording. Validate the one-repair limit before dispatching a `change`. Verification of that change's output must retain the same sequence and origin verification IDs and use ordinal 2; it cannot reset as a fresh sequence. Close the sequence after ordinal 2 or when no repair is authorized. The ledger must not copy skill output or become a second handoff format. Artifact revision markers exclude ledger and orchestration metadata.
 
 ## Skill-specific mappings
 
