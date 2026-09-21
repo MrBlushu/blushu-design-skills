@@ -145,3 +145,16 @@ The baseline used repository commit `154289d`, immediately before the profile im
 - Bare no-task invocations for all three MVP skills returned `NEEDS_TASK` with zero post-preflight actions.
 - Adversarial orchestration checks rejected file-backed verification records, rephrased duplicates, and sequence resets after repair.
 - Generated transcripts and screenshots were not committed.
+
+## Suite completion result — 2026-09-21
+
+After the MVP gate passed, the remaining four skills were checked before the `0.2.0` version update:
+
+- bare and explicit `verify` invocations for `before-we-make-a-mess`, `make-it-flow`, `set-the-grid`, and `lets-build-a-site` returned `NEEDS_TASK` with zero post-preflight actions;
+- a mode-only `review` handoff to `lets-build-a-site` also returned `NEEDS_TASK` without routing;
+- normal non-verify smoke requests for all seven skills retained their domain ownership and write boundaries;
+- discovery produced a bounded decision brief, interaction review preserved save-state semantics, grid review evaluated the fixture layout, and site review stopped when the example request lacked a required brief;
+- the three orchestrator cases stopped on failure, rejected unchanged or rephrased duplicates, and allowed only ordinal-2 reverification within the original sequence after an authorized revision;
+- canonical validation passed for all seven `SKILL.md` files, both platform manifests remained valid, and a clean local Codex installation discovered all seven skills.
+
+Generated transcripts, screenshots, and per-run hash records remain intentionally uncommitted as required by the controls above. This section records the release-gate outcomes rather than embedding model output in the distributable plugin.

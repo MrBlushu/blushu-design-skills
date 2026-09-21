@@ -20,6 +20,20 @@ SKILLS = (
     "lets-build-a-site",
 )
 PROFILES = ("create", "change", "review", "verify")
+PROFILE_MARKER_RE = re.compile(
+    r"(?im)^\s*-\s+\*\*(create|change|review|verify):\*\*"
+)
+ENVELOPE_FIELDS = (
+    "Question",
+    "Scope",
+    "Baseline",
+    "Criteria",
+    "Authority: read-only",
+    "Locked Decisions",
+    "Invocation ID",
+    "Artifact Revision",
+    "Pass Limit: 1",
+)
 
 
 def frontmatter_name(text: str) -> str | None:
@@ -32,19 +46,30 @@ def frontmatter_name(text: str) -> str | None:
     return None
 
 
-def validate_skill(skill: str) -> list[str]:
-    path = SKILLS_ROOT / skill / "SKILL.md"
-    if not path.is_file():
-        return [f"{skill}: missing {path.relative_to(ROOT)}"]
+def execution_profile_window(text: str) -> str | None:
+    first_profile = PROFILE_MARKER_RE.search(text)
+    if first_profile is None:
+        return None
+    next_heading = re.search(r"(?m)^##\s+", text[first_profile.start() :])
+    if next_heading is None:
+        return text[first_profile.start() :]
+    return text[first_profile.start() : first_profile.start() + next_heading.start()]
 
-    text = path.read_text(encoding="utf-8")
+
+def validate_skill_text(skill: str, text: str) -> list[str]:
     errors: list[str] = []
 
     if frontmatter_name(text) != skill:
         errors.append(f"{skill}: frontmatter name does not match directory")
 
+    contract = execution_profile_window(text)
+    if contract is None:
+        return [*errors, f"{skill}: missing execution-profile contract"]
+
     for profile in PROFILES:
-        if not re.search(rf"\*\*{re.escape(profile)}:\*\*", text, re.IGNORECASE):
+        if not re.search(
+            rf"(?im)^\s*-\s+\*\*{re.escape(profile)}:\*\*", contract
+        ):
             errors.append(f"{skill}: missing {profile} profile")
 
     required_signals = {
@@ -53,18 +78,53 @@ def validate_skill(skill: str) -> list[str]:
         "mutation declaration": "Mutations: none",
     }
     for label, signal in required_signals.items():
-        if signal not in text:
+        if signal not in contract:
             errors.append(f"{skill}: missing {label} signal `{signal}`")
 
-    verify_window = text[text.lower().find("**verify:**") :]
+    verify_match = re.search(r"(?im)^\s*-\s+\*\*verify:\*\*", contract)
+    verify_window = contract[verify_match.start() :] if verify_match else ""
+
+    for field in ENVELOPE_FIELDS:
+        if f"`{field}`" not in contract:
+            errors.append(f"{skill}: verify envelope missing `{field}`")
+
+    if not re.search(
+        r"stop before (?:inspecting|project inspection)|"
+        r"stop without loading conditional references|"
+        r"fermarsi prima di ispezionare|"
+        r"fermarsi senza caricare riferimenti condizionali",
+        contract,
+        re.IGNORECASE,
+    ):
+        errors.append(f"{skill}: no-task guard does not stop before inspection")
+
     if not re.search(r"read-only|sola lettura", verify_window, re.IGNORECASE):
         errors.append(f"{skill}: verify does not declare read-only authority")
     if not re.search(r"one bounded pass|un solo passaggio limitato", verify_window, re.IGNORECASE):
         errors.append(f"{skill}: verify does not declare a bounded single pass")
     if not re.search(r"do not invoke another skill|non invocare altre skill", verify_window, re.IGNORECASE):
         errors.append(f"{skill}: verify does not forbid cross-skill invocation")
+    if not re.search(
+        r"do not execute a handoff|non eseguire handoff", verify_window, re.IGNORECASE
+    ):
+        errors.append(f"{skill}: verify does not forbid handoff execution")
+    if not re.search(
+        r"terminal (?:verify )?report replaces|"
+        r"terminal report replaces|"
+        r"report terminale sostituisce",
+        verify_window,
+        re.IGNORECASE,
+    ):
+        errors.append(f"{skill}: verify does not replace normal output terminally")
 
     return errors
+
+
+def validate_skill(skill: str) -> list[str]:
+    path = SKILLS_ROOT / skill / "SKILL.md"
+    if not path.is_file():
+        return [f"{skill}: missing {path.relative_to(ROOT)}"]
+    return validate_skill_text(skill, path.read_text(encoding="utf-8"))
 
 
 def validate_orchestrator() -> list[str]:

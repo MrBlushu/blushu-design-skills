@@ -91,7 +91,7 @@ claude plugin marketplace add MrBlushu/blushu-design-skills
 claude plugin install blushu-design-skills@blushu-design-skills
 ```
 
-After installation, run `/reload-plugins` if the current session does not show the new skills. Claude Code namespaces plugin skills as `/plugin-name:skill-name`, for example `/blushu-design-skills:lets-build-a-site`. Version `2.1.117` is the tested version, not a declared minimum. Seven model-backed invocations remain a release gate.
+After installation, run `/reload-plugins` if the current session does not show the new skills. Claude Code namespaces plugin skills as `/plugin-name:skill-name`, for example `/blushu-design-skills:lets-build-a-site`. Version `2.1.117` is the tested version, not a declared minimum. Seven model-backed invocations remain recommended as a future compatibility check.
 
 ## Build a Complete Website
 
