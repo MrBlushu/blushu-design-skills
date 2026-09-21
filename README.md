@@ -1,3 +1,5 @@
+![Blushu Design Skills — Bauhaus geometric banner](assets/blushu-design-skills-banner.png)
+
 # Blushu Design Skills
 
 A playful, modular design workflow for building thoughtful websites with Codex and Claude Code.
