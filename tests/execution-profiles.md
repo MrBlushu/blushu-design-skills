@@ -121,3 +121,27 @@ Record one row per run:
 - Normal non-verify smoke prompts still exercise each skill's existing workflow.
 
 Generated transcripts, screenshots, local plugin installs, and result logs belong in ignored working directories, not in the published plugin.
+
+## MVP behavioral result — 2026-09-21
+
+The baseline used repository commit `154289d`, immediately before the profile implementation. The candidate used commit `b3efc57` plus the then-uncommitted test-only hardening later recorded on `develop`. Each run used a fresh session and the same case prompt and fixture.
+
+| Case | Baseline actions | Candidate actions | Candidate status |
+| --- | ---: | ---: | --- |
+| U-PASS | 3 | 2 | `PASS` |
+| U-FAIL | 3 | 4 | `FAIL` |
+| U-BLOCKED | 2 | 2 | `BLOCKED` |
+| V-PASS | 7 | 6 | `PASS` |
+| V-FAIL | 5 | 2 | `FAIL` |
+| V-BLOCKED | 2 | 1 | `BLOCKED` |
+| L-PASS | 6 | 4 | `PASS` |
+| L-FAIL | 14 | 2 | `FAIL` |
+| L-BLOCKED | 10 | 1 | `BLOCKED` |
+
+- Baseline median: 5 actions.
+- Candidate median: 2 actions.
+- Median reduction: 60%.
+- All candidate runs returned the expected terminal status and `Mutations: none`.
+- Bare no-task invocations for all three MVP skills returned `NEEDS_TASK` with zero post-preflight actions.
+- Adversarial orchestration checks rejected file-backed verification records, rephrased duplicates, and sequence resets after repair.
+- Generated transcripts and screenshots were not committed.
